@@ -16,6 +16,9 @@ const Hello = props => {
   );
 };
 
+/**
+ * @returns {import("react").ReactElement}
+ */
 const App = () => {
   const name = "Peter";
   const age = 10;
