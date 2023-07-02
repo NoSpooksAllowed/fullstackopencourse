@@ -1,6 +1,17 @@
 import React from "react";
 
 /**
+ * @returns {import("react").ReactElement}
+ */
+const footer = () => {
+  return (
+    <div>
+      greeting app created by <a href="https://github.com/mluukkai">mluukkai</a>
+    </div>
+  );
+};
+
+/**
  * @param {Object} props
  * @returns {import("react").ReactElement}
  */
