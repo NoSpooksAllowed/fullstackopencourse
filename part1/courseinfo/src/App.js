@@ -1,5 +1,8 @@
 import React from "react";
 
+/**
+ * @returns {import("react").ReactElement}
+ */
 const App = () => {
   const course = "Half Stack application development";
   const part1 = "Fundamentals of React";
