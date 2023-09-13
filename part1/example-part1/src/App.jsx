@@ -1,15 +1,19 @@
 import React from "react";
+import { useState } from "react";
 
 /**
  * @param {Object} props
  * @returns {React.ReactElement}
  */
-const Hello = props => {
+const Hello = ({ name, age }) => {
+  const bornYear = () => new Date().getFullYear() - age;
+
   return (
     <div>
       <p>
-        Hello {props.name} you are {props.age} years old
+        Hello {name}, you are {age} years old
       </p>
+      <p>So you were probably born in {bornYear()}</p>
     </div>
   );
 };
@@ -26,22 +30,37 @@ const Footer = () => {
 };
 
 /**
+ * @param {Object} props
+ * @returns {React.ReactElement}
+ */
+const Display = ({ counter }) => {
+  return <div>{counter}</div>;
+};
+
+/**
+ * @param {Object} props
+ * @returns {React.ReactElement}
+ */
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
+
+/**
  * @returns {React.ReactElement}
  */
 const App = () => {
-  const friends = [
-    { name: "Peter", age: 4 },
-    { name: "Maya", age: 10 },
-  ];
+  const [counter, setCounter] = useState(0);
+
+  const increaseByOne = () => setCounter(counter + 1);
+  const decreaseByOne = () => setCounter(counter - 1);
+  const setToZero = () => setCounter(0);
 
   return (
     <div>
-      <p>
-        {friends[0].name} {friends[0].age}
-      </p>
-      <p>
-        {friends[1].name} {friends[1].age}
-      </p>
+      <Display counter={counter} />
+      <Button handleClick={increaseByOne} text="plus" />
+      <Button handleClick={setToZero} text="zero" />
+      <Button handleClick={decreaseByOne} text="minus" />
     </div>
   );
 };
