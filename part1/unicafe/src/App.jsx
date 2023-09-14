@@ -26,6 +26,30 @@ const App = () => {
       setFunc(counter + 1);
     };
   };
+
+  /**
+   * @param {Array<number>} nums
+   * @returns number
+   */
+  const totalFeedbackCount = nums => {
+    return nums.reduce((acc, currVal) => {
+      return acc + currVal;
+    }, 0);
+  };
+
+  /**
+   * @param {Array<number>} nums
+   * @returns number
+   */
+  const countAverage = nums => totalFeedbackCount(nums) / nums.length;
+
+  /**
+   * @param {number} good
+   * @param {number} all
+   * @returns number
+   */
+  const countPercentage = (good, all) => (all ? (good / all) * 100 : 0);
+
   return (
     <div>
       <h2>give feedback</h2>
@@ -37,6 +61,9 @@ const App = () => {
         <p>good {good}</p>
         <p>neutral {neutral}</p>
         <p>bad {bad}</p>
+        <p>all {totalFeedbackCount([good, bad, neutral])}</p>
+        <p>average {countAverage([good, bad, neutral])}</p>
+        <p>positive {countPercentage(good, totalFeedbackCount([good, bad, neutral]))}</p>
       </div>
     </div>
   );
