@@ -12,7 +12,6 @@ const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</
  * @returns {React.ReactElement}
  */
 const Statistics = ({ good, neutral, bad }) => {
-  console.log(`good: ${good}, neutral ${neutral}, bad ${bad}`);
   /**
    * @param {Array<number>} nums
    * @returns number
@@ -36,6 +35,17 @@ const Statistics = ({ good, neutral, bad }) => {
    */
   const countPercentage = (good, all) => (all ? (good / all) * 100 : 0);
 
+  const all = totalFeedbackCount([good, bad, neutral]);
+
+  if (all === 0) {
+    return (
+      <>
+        <h2>statistics</h2>
+        <p>No feedback given</p>
+      </>
+    );
+  }
+
   return (
     <>
       <h2>statistics</h2>
@@ -43,7 +53,7 @@ const Statistics = ({ good, neutral, bad }) => {
         <p>good {good}</p>
         <p>neutral {neutral}</p>
         <p>bad {bad}</p>
-        <p>all {totalFeedbackCount([good, bad, neutral])}</p>
+        <p>all {all}</p>
         <p>average {countAverage([good, bad, neutral])}</p>
         <p>positive {countPercentage(good, totalFeedbackCount([good, bad, neutral]))}</p>
       </div>
