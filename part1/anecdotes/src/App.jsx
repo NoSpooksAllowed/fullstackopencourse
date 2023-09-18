@@ -2,6 +2,15 @@ import React from "react";
 import { useState } from "react";
 
 /**
+ *  @param {Object} props
+ *  @param {React.MouseEventHandler} props.handleClick
+ *  @param {string} props.text
+ *
+ *  @returns {React.ReactElement}
+ * */
+const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>;
+
+/**
  * @returns {React.ReactElement}
  */
 const App = () => {
@@ -18,7 +27,25 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
 
-  return <div>{anecdotes[selected]}</div>;
+  /**
+   * @param {number} counter
+   * @param {CallableFunction} setFunc
+   * @returns {React.MouseEventHandler}
+   */
+  const handleClick = (counter, setFunc) => {
+    return () => {
+      counter = Math.floor(Math.random() * anecdotes.length);
+      setFunc(counter);
+    };
+  };
+
+  console.log(selected);
+  return (
+    <div>
+      <p>{anecdotes[selected]}</p>
+      <Button handleClick={handleClick(selected, setSelected)} text="next anecdote" />
+    </div>
+  );
 };
 
 export default App;
