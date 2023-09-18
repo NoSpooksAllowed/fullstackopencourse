@@ -9,6 +9,22 @@ const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</
 
 /**
  * @param {Object} props
+ * @param {string} props.text
+ * @param {number} props.value
+ * @returns {React.ReactElement}
+ */
+const StatisticsLine = ({ text, value }) => {
+  return (
+    <>
+      <p>
+        {text} {value}
+      </p>
+    </>
+  );
+};
+
+/**
+ * @param {Object} props
  * @returns {React.ReactElement}
  */
 const Statistics = ({ good, neutral, bad }) => {
@@ -50,12 +66,15 @@ const Statistics = ({ good, neutral, bad }) => {
     <>
       <h2>statistics</h2>
       <div>
-        <p>good {good}</p>
-        <p>neutral {neutral}</p>
-        <p>bad {bad}</p>
-        <p>all {all}</p>
-        <p>average {countAverage([good, bad, neutral])}</p>
-        <p>positive {countPercentage(good, totalFeedbackCount([good, bad, neutral]))}</p>
+        <StatisticsLine text="good" value={good} />
+        <StatisticsLine text="neutral" value={neutral} />
+        <StatisticsLine text="bad" value={bad} />
+        <StatisticsLine text="all" value={all} />
+        <StatisticsLine text="average" value={countAverage([good, bad, neutral])} />
+        <StatisticsLine
+          text="positive"
+          value={countPercentage(good, totalFeedbackCount([good, bad, neutral]))}
+        />
       </div>
     </>
   );
