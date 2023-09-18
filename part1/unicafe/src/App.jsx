@@ -15,11 +15,10 @@ const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</
  */
 const StatisticsLine = ({ text, value }) => {
   return (
-    <>
-      <p>
-        {text} {value}
-      </p>
-    </>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   );
 };
 
@@ -65,17 +64,19 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <>
       <h2>statistics</h2>
-      <div>
-        <StatisticsLine text="good" value={good} />
-        <StatisticsLine text="neutral" value={neutral} />
-        <StatisticsLine text="bad" value={bad} />
-        <StatisticsLine text="all" value={all} />
-        <StatisticsLine text="average" value={countAverage([good, bad, neutral])} />
-        <StatisticsLine
-          text="positive"
-          value={countPercentage(good, totalFeedbackCount([good, bad, neutral]))}
-        />
-      </div>
+      <table>
+        <tbody>
+          <StatisticsLine text="good" value={good} />
+          <StatisticsLine text="neutral" value={neutral} />
+          <StatisticsLine text="bad" value={bad} />
+          <StatisticsLine text="all" value={all} />
+          <StatisticsLine text="average" value={countAverage([good, bad, neutral])} />
+          <StatisticsLine
+            text="positive"
+            value={countPercentage(good, totalFeedbackCount([good, bad, neutral]))}
+          />
+        </tbody>
+      </table>
     </>
   );
 };
