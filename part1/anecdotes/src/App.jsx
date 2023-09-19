@@ -26,24 +26,40 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
   /**
-   * @param {number} counter
-   * @param {CallableFunction} setFunc
+   * @param {number} selected
+   * @param {CallableFunction} setSelected
    * @returns {React.MouseEventHandler}
    */
-  const handleClick = (counter, setFunc) => {
+  const selectAnecdote = (selected, setSelected) => {
     return () => {
-      counter = Math.floor(Math.random() * anecdotes.length);
-      setFunc(counter);
+      selected = Math.floor(Math.random() * anecdotes.length);
+      setSelected(selected);
     };
   };
 
-  console.log(selected);
+  /**
+   * @param {number} selected
+   * @param {Array<number>} votes
+   * @param {CallableFunction} setVotes
+   * @returns {React.MouseEventHandler}
+   */
+  const voteAnecdote = (selected, votes, setVotes) => {
+    return () => {
+      const updatedVotes = [...votes];
+      updatedVotes[selected] += 1;
+      setVotes(updatedVotes);
+    };
+  };
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button handleClick={handleClick(selected, setSelected)} text="next anecdote" />
+      <p>has {votes[selected]} votes</p>
+      <Button handleClick={voteAnecdote(selected, votes, setVotes)} text="vote" />
+      <Button handleClick={selectAnecdote(selected, setSelected)} text="next anecdote" />
     </div>
   );
 };
