@@ -11,6 +11,45 @@ import { useState } from "react";
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>;
 
 /**
+ * @param {Object} props
+ * @param {Array<string>} props.anecdotes
+ * @param {Array<number>} props.votes
+ * @returns {React.ReactElement}
+ * */
+const MostVotesAnecdote = ({ anecdotes, votes }) => {
+  /**
+   * @param {Array<number>} arr
+   * @returns {number}
+   */
+  const findMaxIndex = arr => {
+    if (arr.length === 0) {
+      return -1; // Return -1 for an empty array
+    }
+
+    let max = arr[0];
+    let maxIndex = 0;
+
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] > max) {
+        max = arr[i];
+        maxIndex = i;
+      }
+    }
+
+    return maxIndex;
+  };
+
+  const maxIndex = findMaxIndex(votes);
+
+  return (
+    <>
+      <h2>Anecdote with most votes</h2>
+      <p>{anecdotes[maxIndex]}</p>
+    </>
+  );
+};
+
+/**
  * @returns {React.ReactElement}
  */
 const App = () => {
@@ -56,10 +95,12 @@ const App = () => {
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <Button handleClick={voteAnecdote(selected, votes, setVotes)} text="vote" />
       <Button handleClick={selectAnecdote(selected, setSelected)} text="next anecdote" />
+      <MostVotesAnecdote anecdotes={anecdotes} votes={votes} />
     </div>
   );
 };
