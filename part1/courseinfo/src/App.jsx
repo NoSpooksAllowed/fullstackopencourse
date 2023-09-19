@@ -2,53 +2,64 @@ import React from "react";
 
 /**
  * @param {Object} props
+ * @param {string} props.course
  * @returns {React.ReactElement}
  *
  */
-const Header = props => {
+const Header = ({ course }) => {
   return (
     <>
-      <h1>{props.course}</h1>
+      <h1>{course}</h1>
     </>
   );
 };
 
 /**
  * @param {Object} props
+ * @param {string} props.part
+ * @param {number} props.exercises
  * @returns {React.ReactElement}
  */
-const Part = props => {
+const Part = ({ part, exercises }) => {
   return (
     <>
       <p>
-        {props.part} {props.exercises}
+        {part} {exercises}
       </p>
     </>
   );
 };
 
 /**
+ * @typedef {Object} Part
+ * @property {string} name - The name of the part.
+ * @property {number} exercises - The number of exercises in the part.
+ */
+
+/**
  * @param {Object} props
+ * @param {Array<Part>} props.parts
  * @returns {React.ReactElement}
  */
-const Content = props => {
+const Content = ({ parts }) => {
   return (
     <div>
-      <Part part={props.parts[0].name} exercises={props.parts[0].exercises} />
-      <Part part={props.parts[1].name} exercises={props.parts[1].exercises} />
-      <Part part={props.parts[2].name} exercises={props.parts[2].exercises} />
+      <Part part={parts[0].name} exercises={parts[0].exercises} />
+      <Part part={parts[1].name} exercises={parts[1].exercises} />
+      <Part part={parts[2].name} exercises={parts[2].exercises} />
     </div>
   );
 };
 
 /**
  * @param {Object} props
+ * @param {number} props.exercises
  * @returns {React.ReactElement}
  */
-const Total = props => {
+const Total = ({ exercises }) => {
   return (
     <>
-      <p>Number of exercises {props.exercises}</p>
+      <p>Number of exercises {exercises}</p>
     </>
   );
 };
