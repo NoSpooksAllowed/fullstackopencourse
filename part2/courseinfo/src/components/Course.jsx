@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import Part from "./Part";
+import Total from "./Total";
 
 /**
  * @typedef {Object} Part
@@ -16,14 +17,18 @@ import Part from "./Part";
  * @returns {React.ReactElement}
  */
 const Course = ({ course }) => {
+  let sum = 0;
+  course.parts.map(part => {
+    sum += part.exercises;
+  });
+
   return (
     <div>
       <Header course={course.name} />
-      <>
-        {course.parts.map(part => (
-          <Part name={part.name} exercises={part.exercises} />
-        ))}
-      </>
+      {course.parts.map(part => (
+        <Part name={part.name} exercises={part.exercises} />
+      ))}
+      <Total exercises={sum} />
     </div>
   );
 };
