@@ -17,10 +17,9 @@ import Total from "./Total";
  * @returns {React.ReactElement}
  */
 const Course = ({ course }) => {
-  let sum = 0;
-  course.parts.map(part => {
-    sum += part.exercises;
-  });
+  const sum = course.parts.reduce((acc, currVal) => {
+    return acc + currVal.exercises;
+  }, 0);
 
   return (
     <div>
