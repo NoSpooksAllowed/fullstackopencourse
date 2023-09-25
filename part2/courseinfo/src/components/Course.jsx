@@ -21,7 +21,7 @@ const Course = ({ course }) => {
       <Header course={course.name} />
       <>
         {course.parts.map(part => (
-          <Part part={part.name} exercises={part.exercises} />
+          <Part name={part.name} exercises={part.exercises} />
         ))}
       </>
     </div>
