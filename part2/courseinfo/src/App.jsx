@@ -1,7 +1,5 @@
 import React from "react";
-import Header from "./components/Header";
-import Content from "./components/Content";
-import Total from "./components/Total";
+import Course from "./components/Course";
 
 /**
  * @returns {React.ReactElement}
@@ -26,17 +24,7 @@ const App = () => {
     ],
   };
 
-  return (
-    <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total
-        exercises={
-          course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises
-        }
-      />
-    </div>
-  );
+  return <Course course={course} />;
 };
 
 export default App;
