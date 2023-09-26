@@ -3,9 +3,17 @@ import { useState } from "react";
 import Person from "./components/Person.jsx";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas", id: 1, number: "040-1234567" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456", id: 1 },
+    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
+    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
+  ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [newFilterName, setNewFilterName] = useState("");
+  const [filteredPersons, setFilteredPersons] = useState([...persons]);
+  const [showFiltered, setShowFiltered] = useState(false);
 
   /**
    * @param {React.FormEvent<HTMLFormElement>} event
@@ -50,9 +58,34 @@ const App = () => {
     }
   };
 
+  /**
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>} event
+   * @returns {void}
+   * */
+  const handleFilterNameChange = event => {
+    const inputValue = event.target.value;
+    setNewFilterName(inputValue);
+
+    if (inputValue) {
+      setShowFiltered(true);
+      const newfilteredPersons = persons.filter(person =>
+        person.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+
+      setFilteredPersons([...newfilteredPersons]);
+    } else {
+      setShowFiltered(false);
+    }
+  };
+
+  const personsToShow = showFiltered ? filteredPersons : persons;
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with <input value={newFilterName} onChange={handleFilterNameChange} />
+      </div>
       <form onSubmit={addPerson}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
@@ -65,7 +98,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => (
+      {personsToShow.map(person => (
         <Person key={person.id} person={person} />
       ))}
     </div>
