@@ -4,6 +4,7 @@ import React from "react";
  * @typedef {Object} Person
  * @property {number} id
  * @property {string} name
+ * @property {string} number
  */
 
 /**
@@ -15,7 +16,9 @@ import React from "react";
 const Person = ({ person }) => {
   return (
     <>
-      <p>{person.name} </p>
+      <p>
+        {person.name} {person.number}
+      </p>
     </>
   );
 };
