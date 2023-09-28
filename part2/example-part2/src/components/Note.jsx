@@ -10,10 +10,18 @@ import React from "react";
 /**
  * @param {Object} props
  * @param {Note} props.note
+ * @param {React.MouseEventHandler<HTMLButtonElement>} props.toggleImportance
+ *
  * @returns {React.ReactElement}
  */
-const Note = ({ note }) => {
-  return <li>{note.content}</li>;
+const Note = ({ note, toggleImportance }) => {
+  const label = note.important ? "make not important" : "make important";
+  return (
+    <li>
+      {note.content}
+      <button onClick={toggleImportance}>{label}</button>
+    </li>
+  );
 };
 
 export default Note;
