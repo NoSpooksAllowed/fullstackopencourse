@@ -28,7 +28,16 @@ const create = async newObject => {
   return request.then(response => response.data);
 };
 
+/**
+ * @param {number} id
+ * */
+const deletePerson = async id => {
+  const deleteUrl = `${baseUrl}/${id}`;
+  axios.delete(deleteUrl);
+};
+
 export default {
   getAll,
   create,
+  deletePerson,
 };

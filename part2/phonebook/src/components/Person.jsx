@@ -10,14 +10,16 @@ import React from "react";
 /**
  * @param {Object} props
  * @param {Person} props.person
+ * @param {React.MouseEventHandler<HTMLButtonElement>} props.handleDeleteClick
  *
  * @returns {React.ReactElement}
  * */
-const Person = ({ person }) => {
+const Person = ({ person, handleDeleteClick }) => {
   return (
     <>
       <p>
         {person.name} {person.number}
+        <button onClick={handleDeleteClick}>delete</button>
       </p>
     </>
   );

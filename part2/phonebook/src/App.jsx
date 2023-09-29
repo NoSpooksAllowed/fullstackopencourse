@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import Persons from "./components/Persons";
+import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import personServices from "./services/persons";
@@ -51,6 +50,18 @@ const App = () => {
         setPersons(persons.concat(person));
         setNewName("");
         setNewNumber("");
+      });
+    }
+  };
+
+  /**
+   * @param {Person} person
+   * @returns {void}
+   * */
+  const handleDeletePerson = person => {
+    if (window.confirm(`delete ${person.name}`)) {
+      personServices.deletePerson(person.id).then(() => {
+        personServices.getAll().then(initialPersons => setPersons(initialPersons));
       });
     }
   };
@@ -110,7 +121,15 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <div>
+        {personsToShow.map(person => (
+          <Person
+            key={person.id}
+            person={person}
+            handleDeleteClick={() => handleDeletePerson(person)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
