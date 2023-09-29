@@ -24,10 +24,11 @@ const App = () => {
   const [filteredPersons, setFilteredPersons] = useState([...persons]);
   const [showFiltered, setShowFiltered] = useState(false);
 
+  const baseUrl = "http://localhost:3001/persons";
+
   const hook = () => {
     console.log("effect");
-    axios.get("http://localhost:3001/persons").then(response => {
-      console.log("promise fulfilled");
+    axios.get(baseUrl).then(response => {
       setPersons(response.data);
     });
   };
@@ -50,7 +51,9 @@ const App = () => {
     if (isExist) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      setPersons(persons.concat(personObject));
+      axios.post(baseUrl, personObject).then(response => {
+        setPersons(persons.concat(response.data));
+      });
     }
 
     setNewName("");
