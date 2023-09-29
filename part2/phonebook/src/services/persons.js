@@ -36,8 +36,21 @@ const deletePerson = async id => {
   axios.delete(deleteUrl);
 };
 
+/**
+ * @param {Person} newObject
+ * @param {number} oldObjectId
+ * @returns {Promise<Person>}
+ */
+const update = async (newObject, oldObjectId) => {
+  const updateUrl = `${baseUrl}/${oldObjectId}`;
+  const request = axios.put(updateUrl, newObject);
+
+  return request.then(response => response.data);
+};
+
 export default {
   getAll,
   create,
   deletePerson,
+  update,
 };
