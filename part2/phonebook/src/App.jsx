@@ -5,6 +5,7 @@ import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Notification from "./components/Notification";
+import Error from "./components/Error";
 import personServices from "./services/persons";
 
 /**
@@ -29,6 +30,7 @@ const App = () => {
   const [filteredPersons, setFilteredPersons] = useState([...persons]);
   const [showFiltered, setShowFiltered] = useState(false);
   const [addMessage, setAddMessage] = useState(initialAddMessage);
+  const [isError, setErrorStatus] = useState(false);
 
   const hook = () => {
     personServices.getAll().then(initialPersons => setPersons(initialPersons));
@@ -56,14 +58,27 @@ const App = () => {
           `${person.name} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-        personServices.update(personObject, isExist.id).then(newPerson => {
-          const newPersons = persons.map(person =>
-            person.id === newPerson.id ? newPerson : person
-          );
-          setPersons(newPersons);
-          setNewName("");
-          setNewNumber("");
-        });
+        personServices
+          .update(personObject, isExist.id)
+          .then(newPerson => {
+            const newPersons = persons.map(person =>
+              person.id === newPerson.id ? newPerson : person
+            );
+            setPersons(newPersons);
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(error => {
+            setErrorStatus(true);
+            setAddMessage(`${personObject.name} ${error.message}`);
+            personServices.getAll().then(newPersons => {
+              setPersons(newPersons);
+            });
+            setTimeout(() => {
+              setErrorStatus(false);
+              setAddMessage(null);
+            }, 5000);
+          });
       }
     } else {
       personServices.create(personObject).then(person => {
@@ -135,7 +150,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={addMessage} />
+      {isError ? <Error message={addMessage} /> : <Notification message={addMessage} />}
       <Filter newFilterName={newFilterName} handleFilterNameChange={handleFilterNameChange} />
       <h3>Add a new</h3>
       <PersonForm
