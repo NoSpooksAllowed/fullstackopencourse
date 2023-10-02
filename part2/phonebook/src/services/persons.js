@@ -33,7 +33,7 @@ const create = async newObject => {
  * */
 const deletePerson = async id => {
   const deleteUrl = `${baseUrl}/${id}`;
-  axios.delete(deleteUrl);
+  return axios.delete(deleteUrl);
 };
 
 /**

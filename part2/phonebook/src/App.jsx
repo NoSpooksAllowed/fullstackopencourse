@@ -100,7 +100,9 @@ const App = () => {
   const handleDeletePerson = person => {
     if (window.confirm(`delete ${person.name}`)) {
       personServices.deletePerson(person.id).then(() => {
-        personServices.getAll().then(initialPersons => setPersons(initialPersons));
+        personServices.getAll().then(initialPersons => {
+          setPersons(initialPersons);
+        });
       });
     }
   };
