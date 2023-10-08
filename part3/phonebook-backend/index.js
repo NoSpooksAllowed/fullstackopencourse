@@ -35,6 +35,14 @@ app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
 
+app.get("/info", (request, response) => {
+  const phonebookLen = `<p>Phonebook has info for ${persons.length} people</p>`;
+  const dateTime = new Date();
+  const currentDateTime = `<p>${dateTime.toLocaleString()}</p>`;
+
+  response.send(phonebookLen.concat(currentDateTime));
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`server running on localhost:${PORT}`);
