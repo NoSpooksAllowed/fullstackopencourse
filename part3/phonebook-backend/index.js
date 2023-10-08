@@ -31,6 +31,10 @@ app.get("/", (request, response) => {
   response.send("Hello world");
 });
 
+const getRandomId = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
@@ -44,6 +48,20 @@ app.get("/api/persons/:id", (request, response) => {
   } else {
     response.status(404).send(`note with id ${id} not found`);
   }
+});
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: getRandomId(persons.length + 1, 100),
+  };
+
+  persons = persons.concat(person);
+
+  response.json(person);
 });
 
 app.delete("/api/persons/:id", (request, response) => {
