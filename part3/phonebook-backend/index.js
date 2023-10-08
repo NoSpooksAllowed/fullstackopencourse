@@ -53,6 +53,19 @@ app.get("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
+  if (body.name === undefined || body.number === undefined) {
+    return response.status(400).json({
+      error: "no name or number field",
+    });
+  }
+  const foundPerson = persons.find(person => person.name === body.name);
+
+  if (foundPerson) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
   const person = {
     name: body.name,
     number: body.number,
