@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
@@ -9,6 +10,7 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
+app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 
@@ -72,6 +74,21 @@ app.post("/api/notes", (request, response) => {
   notes = notes.concat(note);
 
   response.json(note);
+});
+
+app.put("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  const note = notes.find(note => note.id === id);
+
+  if (note) {
+    note.important = !note.important;
+
+    response.json(note);
+
+    return;
+  }
+
+  response.status(404).end();
 });
 
 app.delete("/api/notes/:id", (request, response) => {
