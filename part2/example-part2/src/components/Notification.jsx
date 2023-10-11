@@ -2,7 +2,7 @@ import React from "react";
 
 /**
  * @param {Object} props
- * @param {string} props.message
+ * @param {string | null} props.message
  *
  * @returns {React.ReactElement | null}
  */
