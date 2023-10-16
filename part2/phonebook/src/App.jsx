@@ -81,15 +81,25 @@ const App = () => {
           });
       }
     } else {
-      personServices.create(personObject).then(person => {
-        setAddMessage(person.name);
-        setTimeout(() => {
-          setAddMessage(null);
-        }, 5000);
-        setPersons(persons.concat(person));
-        setNewName("");
-        setNewNumber("");
-      });
+      personServices
+        .create(personObject)
+        .then(person => {
+          setAddMessage(person.name);
+          setTimeout(() => {
+            setAddMessage(null);
+          }, 5000);
+          setPersons(persons.concat(person));
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch(error => {
+          setErrorStatus(true);
+          setAddMessage(error.response.data.error);
+
+          setTimeout(() => {
+            setErrorStatus(false), setAddMessage(null);
+          }, 5000);
+        });
     }
   };
 
