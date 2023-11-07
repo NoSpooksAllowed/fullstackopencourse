@@ -60,6 +60,25 @@ test("a valid blog can be added", async () => {
   expect(titles).toContain("Goblin's anecdotes");
 }, 100000);
 
+test("verifies if likes propery absent it will set to zero", async () => {
+  const newBlog = {
+    title: "Goblin's anecdotes",
+    author: "Puchkov",
+    url: "https://oper.ru",
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blog = await helper.getLastBlog();
+
+  expect(blog.likes).toBeDefined();
+  expect(blog.likes).toEqual(0);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

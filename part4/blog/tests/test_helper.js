@@ -35,8 +35,15 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON());
 };
 
+const getLastBlog = async () => {
+  const blog = await Blog.findOne().sort({ field: "asc", _id: -1 });
+
+  return blog.toJSON();
+};
+
 module.exports = {
   initialBlogPosts,
   nonExistingId,
   blogsInDb,
+  getLastBlog,
 };
