@@ -79,6 +79,18 @@ test("verifies if likes propery absent it will set to zero", async () => {
   expect(blog.likes).toEqual(0);
 });
 
+test("blog without url and title is not added", async () => {
+  const newBlog = {
+    author: "Puchkov",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const blogsAtEnd = await helper.blogsInDb();
+
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogPosts.length);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

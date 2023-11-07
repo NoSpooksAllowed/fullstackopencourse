@@ -8,14 +8,18 @@ blogRouter.get("/", async (request, response) => {
 });
 
 blogRouter.post("/", async (request, response) => {
-  if (!("likes" in request.body)) {
-    request.body.likes = 0;
+  try {
+    if (!("likes" in request.body)) {
+      request.body.likes = 0;
+    }
+    const blog = new Blog(request.body);
+
+    const result = await blog.save();
+
+    response.status(201).json(result);
+  } catch (error) {
+    response.status(400).send({ error: error.message });
   }
-  const blog = new Blog(request.body);
-
-  const result = await blog.save();
-
-  response.status(201).json(result);
 });
 
 module.exports = blogRouter;
