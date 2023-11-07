@@ -91,6 +91,24 @@ test("blog without url and title is not added", async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogPosts.length);
 });
 
+test("succeeds with status cod 200 and if blogs are the same", async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+  const newBlog = {
+    title: "Hello",
+    author: "Lena",
+    url: "https://ya.ru",
+    likes: 1,
+  };
+
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(newBlog).expect(200);
+  const blogsAfterUpdate = await helper.blogsInDb();
+  delete blogsAfterUpdate[0].id;
+  console.log(blogsAfterUpdate[0]);
+
+  expect(blogsAfterUpdate[0]).toStrictEqual(newBlog);
+});
+
 test("succeeds with status code 204 if id is valid", async () => {
   const blogsAtStart = await helper.blogsInDb();
   const blogToDelete = blogsAtStart[0];
@@ -108,4 +126,4 @@ test("succeeds with status code 204 if id is valid", async () => {
 
 afterAll(async () => {
   await mongoose.connection.close();
-});
+}, 100000);
