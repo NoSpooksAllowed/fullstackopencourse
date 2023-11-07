@@ -39,6 +39,27 @@ test("test that id property is defined", async () => {
   }
 });
 
+test("a valid blog can be added", async () => {
+  const newBlog = {
+    title: "Goblin's anecdotes",
+    author: "Puchkov",
+    url: "https://oper.ru",
+    likes: 120,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogPosts.length + 1);
+
+  const titles = blogsAtEnd.map(blog => blog.title);
+  expect(titles).toContain("Goblin's anecdotes");
+}, 100000);
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
