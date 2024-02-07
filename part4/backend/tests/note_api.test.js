@@ -3,12 +3,21 @@ const mongoose = require("mongoose");
 const helper = require("./test_helper");
 const app = require("../app");
 const api = supertest(app);
+const bcrypt = require("bcrypt");
 
 const Note = require("../models/note");
+const User = require("../models/user");
 
 beforeEach(async () => {
   await Note.deleteMany({});
   await Note.insertMany(helper.initialNotes);
+
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash("sekret", 10);
+  const user = new User({ username: "root", passwordHash });
+
+  await user.save();
 }, 100000);
 
 describe("when there is initially some notes saved", () => {
@@ -28,7 +37,7 @@ describe("when there is initially some notes saved", () => {
   test("a specific note is within the returned notes", async () => {
     const response = await api.get("/api/notes");
 
-    const contents = response.body.map(r => r.content);
+    const contents = response.body.map((r) => r.content);
 
     expect(contents).toContain("Browser can execute only JavaScript");
   });
@@ -63,9 +72,13 @@ describe("viewing a specific note", () => {
 
 describe("addition of a new note", () => {
   test("succeeds with valid data", async () => {
+    const users = await User.find({});
+    const user = users[0].toJSON();
+
     const newNote = {
       content: "async/await simplifies making async calls",
       important: true,
+      userId: user.id,
     };
 
     await api
@@ -77,13 +90,17 @@ describe("addition of a new note", () => {
     const notesAtEnd = await helper.notesInDb();
     expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
 
-    const contents = notesAtEnd.map(n => n.content);
+    const contents = notesAtEnd.map((n) => n.content);
     expect(contents).toContain("async/await simplifies making async calls");
   });
 
   test("fails with status code 400 if data invalid", async () => {
+    const users = await User.find({});
+    const user = users[0].toJSON();
+
     const newNote = {
       important: true,
+      userId: user.id,
     };
 
     await api.post("/api/notes").send(newNote).expect(400);
@@ -105,7 +122,7 @@ describe("deletion of a note", () => {
 
     expect(notesAtEnd).toHaveLength(helper.initialNotes.length - 1);
 
-    const contents = notesAtEnd.map(r => r.content);
+    const contents = notesAtEnd.map((r) => r.content);
 
     expect(contents).not.toContain(noteToDelete.content);
   });
