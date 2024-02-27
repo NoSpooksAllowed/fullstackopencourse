@@ -20,7 +20,7 @@ userRouter.post("/", async (request, response) => {
 
     response.status(201).json(savedUser);
   } catch (error) {
-    response.status(401).send({ message: error.message });
+    response.status(400).send({ message: error.message });
   }
 });
 
@@ -30,7 +30,7 @@ userRouter.get("/", async (request, response) => {
 
     response.status(200).json(users);
   } catch (error) {
-    response.status(401).send({ message: error.message });
+    response.status(400).send({ message: error.message });
   }
 });
 
