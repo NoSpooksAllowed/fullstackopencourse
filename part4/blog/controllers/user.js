@@ -16,6 +16,7 @@ userRouter.post("/", async (request, response) => {
     });
 
     const savedUser = await user.save();
+    delete savedUser.passwordHash;
 
     response.status(201).json(savedUser);
   } catch (error) {
@@ -25,11 +26,9 @@ userRouter.post("/", async (request, response) => {
 
 userRouter.get("/", async (request, response) => {
   try {
-    const users = await User.find({}).populate("blogs", {
-      content: 1,
-      important: 1,
-    });
-    response.json(users);
+    const users = await User.find({});
+
+    response.status(200).json(users);
   } catch (error) {
     response.status(401).send({ message: error.message });
   }

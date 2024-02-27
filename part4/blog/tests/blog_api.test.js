@@ -56,7 +56,7 @@ test("a valid blog can be added", async () => {
   const blogsAtEnd = await helper.blogsInDb();
   expect(blogsAtEnd).toHaveLength(helper.initialBlogPosts.length + 1);
 
-  const titles = blogsAtEnd.map(blog => blog.title);
+  const titles = blogsAtEnd.map((blog) => blog.title);
   expect(titles).toContain("Goblin's anecdotes");
 }, 100000);
 
@@ -119,7 +119,7 @@ test("succeeds with status code 204 if id is valid", async () => {
 
   expect(blogsAtEnd).toHaveLength(helper.initialBlogPosts.length - 1);
 
-  const titles = blogsAtEnd.map(b => b.id);
+  const titles = blogsAtEnd.map((b) => b.id);
 
   expect(titles).not.toContain(blogToDelete.id);
 });

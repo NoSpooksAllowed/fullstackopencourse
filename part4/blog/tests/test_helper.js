@@ -1,15 +1,16 @@
+const bcrypt = require("bcrypt");
 const Blog = require("../models/blog");
 
 const initialBlogPosts = [
   {
     title: "Hello",
-    author: "Lena",
+    author: null,
     url: "https://ya.ru",
     likes: 10,
   },
   {
     title: "Uraa",
-    author: "Vasya",
+    author: null,
     url: "https://google.com",
     likes: 111,
   },
@@ -32,7 +33,7 @@ const nonExistingId = async () => {
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
 
-  return blogs.map(blog => blog.toJSON());
+  return blogs.map((blog) => blog.toJSON());
 };
 
 const getLastBlog = async () => {
