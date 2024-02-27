@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const initialBlogPosts = [
   {
@@ -13,6 +14,20 @@ const initialBlogPosts = [
     author: null,
     url: "https://google.com",
     likes: 111,
+  },
+];
+
+const initialUsers = [
+  {
+    username: "kommunist",
+    name: "Stas Ai Kak Prosto",
+    password: "raketa666",
+  },
+
+  {
+    username: "zhopa",
+    name: "Dmitry Puchkov",
+    password: "raketa666",
   },
 ];
 
@@ -36,6 +51,12 @@ const blogsInDb = async () => {
   return blogs.map((blog) => blog.toJSON());
 };
 
+const usersInDb = async () => {
+  const users = await User.find({});
+
+  return users.map((user) => user.toJSON());
+};
+
 const getLastBlog = async () => {
   const blog = await Blog.findOne().sort({ field: "asc", _id: -1 });
 
@@ -47,4 +68,6 @@ module.exports = {
   nonExistingId,
   blogsInDb,
   getLastBlog,
+  initialUsers,
+  usersInDb,
 };
