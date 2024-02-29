@@ -12,15 +12,7 @@ class FieldLengthError extends Error {
   }
 }
 
-class UniqueFieldError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "UniqueFieldError";
-  }
-}
-
 module.exports = {
   ValidationError,
   FieldLengthError,
-  UniqueFieldError,
 };
