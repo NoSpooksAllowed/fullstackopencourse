@@ -4,6 +4,7 @@ const app = require("../app");
 const helper = require("./test_helper");
 
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const api = supertest(app);
 
@@ -94,10 +95,12 @@ test("blog without url and title is not added", async () => {
 test("succeeds with status cod 200 and if blogs are the same", async () => {
   const blogsAtStart = await helper.blogsInDb();
   const blogToUpdate = blogsAtStart[0];
+  const user = await User.findOne();
   const newBlog = {
     title: "Hello",
     author: "Lena",
     url: "https://ya.ru",
+    user: user?._id,
     likes: 1,
   };
 
