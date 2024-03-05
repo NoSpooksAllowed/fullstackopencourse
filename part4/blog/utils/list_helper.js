@@ -1,10 +1,10 @@
 const _ = require("lodash");
 
-const dummy = blogs => {
+const dummy = (blogs) => {
   return 1;
 };
 
-const totalLikes = blogs => {
+const totalLikes = (blogs) => {
   if (blogs.length === 0) {
     return 0;
   }
@@ -12,7 +12,7 @@ const totalLikes = blogs => {
   return blogs.reduce((sumLikes, blog) => sumLikes + blog.likes, 0);
 };
 
-const favoriteBlog = blogs => {
+const favoriteBlog = (blogs) => {
   if (blogs.length === 0) {
     return {};
   }
@@ -28,7 +28,7 @@ const favoriteBlog = blogs => {
   };
 };
 
-const mostBlogs = blogs => {
+const mostBlogs = (blogs) => {
   if (blogs.length === 0) {
     return {};
   }
@@ -45,7 +45,7 @@ const mostBlogs = blogs => {
   return topAuthor;
 };
 
-const mostLikes = blogs => {
+const mostLikes = (blogs) => {
   if (blogs.length === 0) {
     return {};
   }
@@ -62,10 +62,19 @@ const mostLikes = blogs => {
   return topAuthor;
 };
 
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
   mostLikes,
+  getTokenFrom,
 };

@@ -12,7 +12,15 @@ class FieldLengthError extends Error {
   }
 }
 
+class AuthenticationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "AuthenticationError";
+  }
+}
+
 module.exports = {
   ValidationError,
   FieldLengthError,
+  AuthenticationError,
 };
