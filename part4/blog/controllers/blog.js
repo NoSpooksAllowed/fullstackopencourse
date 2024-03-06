@@ -63,7 +63,21 @@ blogRouter.post("/", async (request, response, next) => {
 blogRouter.put("/:id", async (request, response, next) => {
   try {
     const body = request.body;
-    const user = await User.findOne();
+
+    const decodedToken = jwt.verify(
+      getTokenFrom(request),
+      String(process.env.SECRET)
+    );
+
+    if (!decodedToken.id) {
+      throw new jwt.JsonWebTokenError("token invalid");
+    }
+
+    const user = await User.findById(decodedToken.id);
+
+    if (user === null) {
+      throw new Error("did not find user");
+    }
 
     const blog = {
       title: body.title,
@@ -74,7 +88,7 @@ blogRouter.put("/:id", async (request, response, next) => {
     };
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
       new: true,
-    });
+    }).populate("user", "-blogs");
     response.json(updatedBlog);
   } catch (error) {
     next(error);
