@@ -19,8 +19,16 @@ class AuthenticationError extends Error {
   }
 }
 
+class ForbiddenError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ForbiddenError";
+  }
+}
+
 module.exports = {
   ValidationError,
   FieldLengthError,
   AuthenticationError,
+  ForbiddenError,
 };

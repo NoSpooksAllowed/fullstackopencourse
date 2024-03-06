@@ -2,7 +2,7 @@ const blogRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const { getTokenFrom } = require("../utils/list_helper");
+const { ForbiddenError } = require("../utils/custom_errors");
 
 blogRouter.get("/", async (request, response, next) => {
   try {
@@ -17,10 +17,7 @@ blogRouter.get("/", async (request, response, next) => {
 blogRouter.post("/", async (request, response, next) => {
   try {
     const body = request.body;
-    const decodedToken = jwt.verify(
-      getTokenFrom(request),
-      String(process.env.SECRET)
-    );
+    const decodedToken = jwt.verify(request.token, String(process.env.SECRET));
 
     if (!decodedToken.id) {
       throw new jwt.JsonWebTokenError("token invalid");
@@ -64,10 +61,7 @@ blogRouter.put("/:id", async (request, response, next) => {
   try {
     const body = request.body;
 
-    const decodedToken = jwt.verify(
-      getTokenFrom(request),
-      String(process.env.SECRET)
-    );
+    const decodedToken = jwt.verify(request.token, String(process.env.SECRET));
 
     if (!decodedToken.id) {
       throw new jwt.JsonWebTokenError("token invalid");
@@ -97,6 +91,24 @@ blogRouter.put("/:id", async (request, response, next) => {
 
 blogRouter.delete("/:id", async (request, response, next) => {
   try {
+    const decodedToken = jwt.verify(request.token, String(process.env.SECRET));
+
+    if (!decodedToken.id) {
+      throw new jwt.JsonWebTokenError("token invalid");
+    }
+
+    const user = await User.findByIdAndUpdate(
+      decodedToken.id,
+      {
+        $pull: { blogs: request.params.id },
+      },
+      { new: true }
+    );
+
+    if (user === null) {
+      throw new ForbiddenError("You're not permitted to do this");
+    }
+
     await Blog.findByIdAndRemove(request.params.id);
 
     response.status(204).end();
