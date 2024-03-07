@@ -1,8 +1,7 @@
 const blogRouter = require("express").Router();
-const jwt = require("jsonwebtoken");
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const { ForbiddenError } = require("../utils/custom_errors");
+const middleware = require("../utils/middleware");
 
 blogRouter.get("/", async (request, response, next) => {
   try {
@@ -17,17 +16,7 @@ blogRouter.get("/", async (request, response, next) => {
 blogRouter.post("/", async (request, response, next) => {
   try {
     const body = request.body;
-    const decodedToken = jwt.verify(request.token, String(process.env.SECRET));
-
-    if (!decodedToken.id) {
-      throw new jwt.JsonWebTokenError("token invalid");
-    }
-
-    const user = await User.findById(decodedToken.id);
-
-    if (user === null) {
-      throw new Error("did not find user");
-    }
+    const user = request.user;
 
     const blog = new Blog({
       title: body.title,
@@ -57,64 +46,57 @@ blogRouter.post("/", async (request, response, next) => {
   }
 });
 
-blogRouter.put("/:id", async (request, response, next) => {
-  try {
-    const body = request.body;
+blogRouter.put(
+  "/:id",
+  middleware.checkUserBlogOwnership,
+  async (request, response, next) => {
+    try {
+      const body = request.body;
+      const user = request.user;
 
-    const decodedToken = jwt.verify(request.token, String(process.env.SECRET));
-
-    if (!decodedToken.id) {
-      throw new jwt.JsonWebTokenError("token invalid");
+      const blog = {
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        user: user,
+        likes: body.likes || 0,
+      };
+      const updatedBlog = await Blog.findByIdAndUpdate(
+        request.params.id,
+        blog,
+        {
+          new: true,
+        }
+      ).populate("user", "-blogs");
+      response.json(updatedBlog);
+    } catch (error) {
+      next(error);
     }
-
-    const user = await User.findById(decodedToken.id);
-
-    if (user === null) {
-      throw new Error("did not find user");
-    }
-
-    const blog = {
-      title: body.title,
-      author: body.author,
-      url: body.url,
-      user: user,
-      likes: body.likes || 0,
-    };
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
-      new: true,
-    }).populate("user", "-blogs");
-    response.json(updatedBlog);
-  } catch (error) {
-    next(error);
   }
-});
+);
 
-blogRouter.delete("/:id", async (request, response, next) => {
-  try {
-    const decodedToken = jwt.verify(request.token, String(process.env.SECRET));
+blogRouter.delete(
+  "/:id",
+  middleware.checkUserBlogOwnership,
+  async (request, response, next) => {
+    try {
+      const user = request.user;
 
-    if (!decodedToken.id) {
-      throw new jwt.JsonWebTokenError("token invalid");
+      await User.findByIdAndUpdate(
+        user._id,
+        {
+          $pull: { blogs: request.params.id },
+        },
+        { new: true }
+      );
+
+      await Blog.findByIdAndRemove(request.params.id);
+
+      response.status(204).end();
+    } catch (error) {
+      next(error);
     }
-
-    const user = await User.findByIdAndUpdate(
-      decodedToken.id,
-      {
-        $pull: { blogs: request.params.id },
-      },
-      { new: true }
-    );
-
-    if (user === null) {
-      throw new ForbiddenError("You're not permitted to do this");
-    }
-
-    await Blog.findByIdAndRemove(request.params.id);
-
-    response.status(204).end();
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 module.exports = blogRouter;

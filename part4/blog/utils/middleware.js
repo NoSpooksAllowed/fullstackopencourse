@@ -1,4 +1,7 @@
 const logger = require("./logger");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const { ForbiddenError } = require("../utils/custom_errors");
 
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get("authorization");
@@ -9,6 +12,44 @@ const tokenExtractor = (request, response, next) => {
   }
 
   next();
+};
+
+const userExtractor = async (request, response, next) => {
+  try {
+    const decodedToken = jwt.verify(request.token, String(process.env.SECRET));
+
+    if (!decodedToken.id) {
+      throw new jwt.JsonWebTokenError("token invalid");
+    }
+
+    const user = await User.findById(decodedToken.id);
+
+    if (user === null) {
+      throw new Error("User not found");
+    }
+
+    request.user = user;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+const checkUserBlogOwnership = async (request, response, next) => {
+  try {
+    const ownsBlog = request.user.blogs.some((blog) =>
+      blog.equals(request.params.id)
+    );
+
+    if (!ownsBlog) {
+      throw new ForbiddenError("Perrmision denied to perform this operation");
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 };
 
 const requestLogger = (request, response, next) => {
@@ -56,4 +97,6 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
+  checkUserBlogOwnership,
 };
