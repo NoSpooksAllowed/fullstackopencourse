@@ -1,17 +1,17 @@
-const bcrypt = require("bcrypt");
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 const initialBlogPosts = [
   {
     title: "Hello",
-    author: null,
+    author: "Popka Durka",
     url: "https://ya.ru",
     likes: 10,
   },
   {
     title: "Uraa",
-    author: null,
+    author: "Popka Durka",
     url: "https://google.com",
     likes: 111,
   },
@@ -63,6 +63,15 @@ const getLastBlog = async () => {
   return blog.toJSON();
 };
 
+const getJWTToken = async (user) => {
+  const userForToken = {
+    username: user.username,
+    id: user._id,
+  };
+
+  return jwt.sign(userForToken, String(process.env.SECRET));
+};
+
 module.exports = {
   initialBlogPosts,
   nonExistingId,
@@ -70,4 +79,5 @@ module.exports = {
   getLastBlog,
   initialUsers,
   usersInDb,
+  getJWTToken,
 };
