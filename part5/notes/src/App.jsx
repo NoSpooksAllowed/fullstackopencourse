@@ -28,13 +28,14 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const hook = () => {
-    noteService.getAll().then((initialNotes) => {
-      setNotes(initialNotes);
-    });
+  const hook = async () => {
+    const initialNotes = await noteService.getAll();
+    setNotes(initialNotes);
   };
 
-  useEffect(hook, []);
+  useEffect(() => {
+    hook();
+  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
@@ -75,25 +76,21 @@ const App = () => {
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   /** @param {number} id */
-  const toggleImportanceOf = (id) => {
-    const url = `http://localhost:3001/notes/${id}`;
+  const toggleImportanceOf = async (id) => {
     const note = notes.find((note) => note.id === id);
     const changedNote = { ...note, important: !note?.important };
 
-    noteService
-      .update(id, changedNote)
-      .then((returnedNote) => {
-        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
-      })
-      .catch((error) => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`
-        );
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-        setNotes(notes.filter((n) => n.id !== id));
-      });
+    try {
+      const returnedNote = await noteService.update(id, changedNote);
+
+      setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
+    } catch (error) {
+      setErrorMessage(`Note '${note.content}' was already removed from server`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+      setNotes(notes.filter((n) => n.id !== id));
+    }
   };
 
   /**
