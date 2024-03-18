@@ -51,9 +51,9 @@ const App = () => {
 
   /**
    * @param {React.FormEvent<HTMLFormElement>} event
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  const addNote = (event) => {
+  const addNote = async (event) => {
     event.preventDefault();
     const noteObject = {
       content: newNote,
@@ -61,10 +61,9 @@ const App = () => {
       id: notes.length + 1,
     };
 
-    noteService.create(noteObject).then((returnedNote) => {
-      setNotes(notes.concat(returnedNote));
-      setNewNote("");
-    });
+    const returnedNode = await noteService.create(noteObject);
+    setNotes(notes.concat(returnedNode));
+    setNewNote("");
   };
 
   /**
