@@ -13,6 +13,15 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
+  }, []);
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -39,7 +48,13 @@ const App = () => {
     <>
       <Notification message={errorMessage} />
       {user ? (
-        <BlogLayout blogs={blogs} setBlogs={setBlogs} username={user.name} />
+        <BlogLayout
+          user={user}
+          setUser={setUser}
+          blogs={blogs}
+          setBlogs={setBlogs}
+          username={user.name}
+        />
       ) : (
         <LoginForm
           handleLogin={handleLogin}
