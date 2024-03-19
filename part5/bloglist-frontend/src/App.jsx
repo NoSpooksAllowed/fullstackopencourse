@@ -37,7 +37,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setErrorMessage("Wrong username or password");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
@@ -46,7 +46,6 @@ const App = () => {
 
   return (
     <>
-      <Notification message={errorMessage} />
       {user ? (
         <BlogLayout
           user={user}
@@ -62,6 +61,7 @@ const App = () => {
           setUsername={setUsername}
           password={password}
           setPassword={setPassword}
+          message={errorMessage}
         />
       )}
     </>

@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const CreateBlog = ({ blogs, setBlogs }) => {
+const CreateBlog = ({ blogs, setBlogs, setMessage }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -21,6 +21,12 @@ const CreateBlog = ({ blogs, setBlogs }) => {
       setAuthor("");
       setUrl("");
       setBlogs(blogs.concat(returnedBlog));
+      setMessage(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      );
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     } catch (error) {
       console.log(error);
     }

@@ -1,4 +1,5 @@
 import React from "react";
+import ErrorNotification from "./ErrorNotification";
 
 const LoginForm = ({
   handleLogin,
@@ -6,10 +7,12 @@ const LoginForm = ({
   password,
   setUsername,
   setPassword,
+  message,
 }) => {
   return (
     <>
       <h2>Login to application</h2>
+      <ErrorNotification message={message} />
       <form onSubmit={handleLogin}>
         <div>
           username
