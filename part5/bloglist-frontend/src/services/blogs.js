@@ -11,9 +11,14 @@ const getAll = async () => {
   return response.data;
 };
 
+const createBlog = async (credentials) => {
+  const response = await axios.post(baseUrl, credentials, config);
+  return response.data;
+};
+
 const setToken = (newToken) => {
   config.token = `Bearer ${newToken}`;
   config.headers = { Authorization: config.token };
 };
 
-export default { getAll, setToken };
+export default { getAll, setToken, createBlog };
